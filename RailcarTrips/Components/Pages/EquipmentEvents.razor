@@ -1,0 +1,69 @@
+﻿@using global::RailcarTrips.Models
+@using global::RailcarTrips.Utils
+
+<div class="modal-backdrop fade show"></div>
+
+<div class="modal show d-block" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">List of Events by Trip</h5>
+                <button type="button" class="btn-close" @onclick="OnClose"></button>
+            </div>
+
+            <div class="modal-body modal-scroll">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>TripId</th>
+                            <th>Id</th>
+                            <th>Event</th>
+                            <th>Local Time</th>
+                            <th>City</th>
+                            <th>TimeZone</th>
+                            <th>UTC Time</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (List is not null)
+                        {
+                            @foreach (var item in List)
+                            {
+                                <tr class="@(item.EventId == "W" || item.EventId == "Z" ? "table-warning" : "")">
+                                    <td>@item.TripId</td>
+                                    <td>@item.Id</td>
+                                    <td class="@(item.EventId == "W" || item.EventId == "Z" ? "fw-bold" : "")">@item.EventDescription</td>
+                                    <td>@item.EventTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@item.CityName</td>
+                                    <td>@item.CityTimeZone</td>
+                                    <td>@SharedFunctions.ConvertToUtcTime(CityList, item.EventTime, item.CityId)</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @onclick="OnClose">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    [Parameter]
+    public List<EquipmentEvent_View> List { get; set; } = new();
+    [Parameter]
+    public List<City> CityList { get; set; } = new();
+
+    [Parameter] public EventCallback OnClose { get; set; }
+
+
+}

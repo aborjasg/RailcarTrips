@@ -1,0 +1,42 @@
+﻿@page "/"
+@attribute [StreamRendering(true)]
+@attribute [OutputCache(Duration = 5)]
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.OutputCaching
+@using global::RailcarTrips.Models
+@inject AppDbContext _dbContext
+
+<PageTitle>Railcar Trips</PageTitle>
+
+<h1>Railcar Trips</h1>
+
+<div style="display: inline-block">
+    @* <button type="button" class="btn btn-primary" @onclick="RailcarTrip_SaveRecord">Save One</button>
+    <button type="button" class="btn btn-primary" @onclick="RailcarTrip_SaveList">Save List</button> *@
+
+    <InputFile OnChange="LoadCsvFile" class="btn btn-secondary" />
+    <button type="button" class="btn btn-primary" @onclick="ProcessCsvFile" style="display: inline-block">Process CSV</button>    
+   
+</div>
+
+<div>
+@if (RailcarTripList.Count > 0)
+    {
+        <RailcarTrips List="@RailcarTrip_ViewList" OnDetails="RailcarTrip_Details" OnDelete="RailcarTrip_DeleteRecord"></RailcarTrips>
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(MessageImport))
+{
+ <div class="alert alert-dark" role="alert" style="display: inline-block">
+    @MessageImport
+</div>
+}
+
+<div>
+    @if (EquipmentEventList.Count > 0 && ShowPopup)
+    {
+        <EquipmentEvents List="@EquipmentEvent_ViewList" CityList="@CityList" OnClose="ClosePopup"></EquipmentEvents>
+    }
+</div>
+
